@@ -1,13 +1,15 @@
 const express = require('express');
 const {User, validate} = require('../models/user');
 const bcrypt = require('bcrypt');
+const {checkNotAuthenticated} = require('../middleware/checkAuth');
+
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', checkNotAuthenticated, (req, res) => {
     res.render('signup.ejs');
 });
 
-router.post('/', async (req, res) => {
+router.post('/', checkNotAuthenticated, async (req, res) => {
     const {error} = validate(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
