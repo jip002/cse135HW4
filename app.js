@@ -42,7 +42,7 @@ app.use('/api/logout', logout);
 app.set('view-engine', 'ejs');
 
 app.get('/database', (req, res)=>{
-    res.sendFile('userMgt.ejs', {root:__dirname})
+    res.render('userMgt.ejs');
 })
 //--------------MongDB--------------------
 mongoose.connect('mongodb://0.0.0.0:27017/test')
