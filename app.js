@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const login = require('./routes/login');
 const signup = require('./routes/signup');
 const index = require('./routes/index');
+const users = require('./routes/users');
 
 const init = require('./passport-config');
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({extended: false}));
 app.use('/', index);
 app.use('/api/login', login);
 app.use('/api/signup', signup);
+app.use('/api/users', users);
 //--------------------------------------------
 app.set('view-engine', 'ejs');
 

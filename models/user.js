@@ -1,3 +1,4 @@
+const { func } = require('joi');
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
@@ -31,5 +32,15 @@ function validateUser(req){
     return schema.validate(req);
 };
 
+async function findUserByEmail(email){
+    return await User.findOne({ email: email });
+};
+
+async function findUserById(id){
+    return await User.findById(id);
+};
+
 exports.User = User;
 exports.validate = validateUser;
+exports.findUserByEmail = findUserByEmail;
+exports.findUserById = findUserById;
