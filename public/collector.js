@@ -82,8 +82,10 @@ let collectedData = {
      other:"3",
   }
 
-  const url = 'https://reporting.jip002.site/api/data';
-  const actUrl = 'https://reporting.jip002.site/api/data/activity';
+  //const url = 'https://reporting.jip002.site/api/data';
+  //const actUrl = 'https://reporting.jip002.site/api/data/activity';
+  const url = 'http://localhost:3004/api/data';
+  const actUrl = 'http://localhost:3004/api/data/activity';
 
 
   async function sendData() {
@@ -135,6 +137,7 @@ let collectedData = {
     sendActivityData();
   });
 
+ 
   document.addEventListener("mousemove", (event)=>{
     const x = event.offsetX;
     const y = event.offsetY;
