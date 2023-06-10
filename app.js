@@ -12,7 +12,7 @@ const signup = require('./routes/signup');
 const index = require('./routes/index');
 const users = require('./routes/users');
 const logout = require('./routes/logout');
-
+const db = require('./routes/db');
 //----------------Setting-Passport------------
 const init = require('./passport-config');
 const {findUserByEmail, findUserById} = require('./models/user');
@@ -32,7 +32,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(override('_method'));
-
+app.use('/api/db', db);
 //--------------Use-Routes--------------------
 app.use('/', index);
 app.use('/api/login', login);
@@ -41,6 +41,9 @@ app.use('/api/users', users);
 app.use('/api/logout', logout);
 app.set('view-engine', 'ejs');
 
+app.get('/database', (req, res)=>{
+    res.sendFile('userMgt.ejs', {root:__dirname})
+})
 //--------------MongDB--------------------
 mongoose.connect('mongodb://0.0.0.0:27017/test')
     .then(()=> console.log("connected to mongodb..."))
