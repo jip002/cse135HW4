@@ -1,18 +1,20 @@
-const express = require('express');
-const app = express();
+const express  = require('express');
+const app      = express();
 const mongoose = require('mongoose');
 const passport = require('passport');
-const flash = require('express-flash');
-const session = require('express-session');
+const flash    = require('express-flash');
+const session  = require('express-session');
 const override = require('method-override');
+const cors     = require('cors');
 
 //------------------Routes--------------------
-const login = require('./routes/login');
+const login  = require('./routes/login');
 const signup = require('./routes/signup');
-const index = require('./routes/index');
-const users = require('./routes/users');
+const index  = require('./routes/index');
+const users  = require('./routes/users');
 const logout = require('./routes/logout');
-const db = require('./routes/db');
+const db     = require('./routes/db');
+const data   = require('./routes/data');
 //----------------Setting-Passport------------
 const init = require('./passport-config');
 const {findUserByEmail, findUserById} = require('./models/user');
@@ -33,12 +35,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(override('_method'));
 app.use('/api/db', db);
+app.use(express.static(__dirname + '/public' ));
+app.use(cors());
 //--------------Use-Routes--------------------
 app.use('/', index);
 app.use('/api/login', login);
 app.use('/api/signup', signup);
 app.use('/api/users', users);
 app.use('/api/logout', logout);
+app.use('/api/data', data);
 app.set('view-engine', 'ejs');
 
 app.get('/database', (req, res)=>{
