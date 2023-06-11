@@ -30,7 +30,6 @@ router.get('/activity', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    console.log(req.body);
     const static = new Static({
         userAgent: req.body.staticData.userAgent,
         userLanguage: req.body.staticData.language,
@@ -113,7 +112,6 @@ router.post('/activity', async (req, res) => {
         scrollPosition: req.body.scrollPosition
     })
     const resultActivity = await activity.save();
-    console.log(resultActivity);
     res.status(200).json(req.body);
 })
 

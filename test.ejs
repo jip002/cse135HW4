@@ -1,0 +1,33 @@
+    <script nonce="undefined" src="https://cdn.zinggrid.com/zinggrid.min.js"></script>  
+    <style>    
+        .zg-html,    
+        .zg-body {      
+            height: 100%;      
+            width: 100%;      
+            margin: 0;      
+            padding: 0;    
+        }    
+        zing-grid[loading] {      
+            height: 613px;    
+        }  
+    </style>
+    <zing-grid caption="Mouse Position" editor sort static-menu>    
+        <zg-colgroup>      
+            <zg-column index="X-Coordinate" header="X-Coordinate"></zg-column>      
+            <zg-column index="Y-Coordinate" header="Y-Coordinate"></zg-column>      
+        </zg-colgroup>    
+        <zg-data data=[]></zg-data>  
+    </zing-grid>  
+    <script>
+        let data = document.querySelector('zg-data');
+        fetch('http://localhost:3004/api/data/activity')
+        .then(response => response.json())
+        .then(data => {
+            var grid = document.querySelector('zg-data');
+            let bb = [];
+            for(let i = 0; i < 50; i++){
+                bb.push({"X-Coordinate": data[i].mousePosition.xCoordinate,"Y-Coordinate": data[i].mousePosition.yCoordinate});
+            }
+            grid.data = bb;
+        });
+    </script>

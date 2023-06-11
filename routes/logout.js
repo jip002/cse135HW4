@@ -4,7 +4,7 @@ const router = express.Router();
 router.delete('/', (req, res) => {
     req.logout(function(err) {
         if (err) { return next(err); }
-        res.redirect('/');
+        res.render('logout.ejs');
       });
 });
 
