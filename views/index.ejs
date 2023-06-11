@@ -61,41 +61,6 @@
           }  
       </style>
       <script src="bubble.js"></script>
-
-      <div id="myChart1" class="chart--container">
-      </div>
-      <script>
-        ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
-        fetch('http://localhost:3004/api/data/activity')
-        .then(response=>response.json())
-        .then(data => {  
-            var dataNew = [];
-            for(let i = 0; i <Object.keys(data).length; i++){ 
-                dataNew.push([data[i].mousePosition.xCoordinate,data[i].mousePosition.yCoordinate]);
-            }
-        var myConfig2 = {
-          "type": "hscatter",
-          "title": {
-                "text": "Mouse movement trace",
-                "font-color": "#7E7E7E",
-                "backgroundColor": "none",
-                "font-size": "22px",
-                "alpha": 1,
-                "adjust-layout": true,
-              },
-          "series": [{
-            "values": dataNew
-            
-          }]
-        };
-        zingchart.render({
-          id: 'myChart1',
-          data: myConfig2,
-          height: 900,
-          width: "100%"
-        });
-      });
-      </script>
     
       <div id='myChart2'><a class="zc-ref" ></a></div>
       <script>
@@ -245,4 +210,4 @@
             width: '100%'
           });
         })
-      </script>  
+      </script>
