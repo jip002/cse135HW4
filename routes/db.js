@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
 const { User } = require('../models/user');
 
 router.use(express.json());
@@ -29,7 +28,6 @@ router.post('/info', async(req, res)=>{
     const resultUser = await user.save();
     console.log(resultUser);
     res.status(200).send(await User.find());
-    // res.status(200).json(req.body);
 })
 router.delete('/info', async(req, res)=>{
     console.log('here');

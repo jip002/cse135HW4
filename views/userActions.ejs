@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Home Page</title>
+  <title>Detailed Page</title>
   <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
   <style>
     .bubble { padding:1rem; display:flex; flex-direction:column; align-items:center; background:#fff; box-sizing:border-box; }
@@ -12,26 +12,47 @@
 </head>
 
 <body class="zc-body">
+  <h2>Which part of the page is the user engaging the most?</h2>
   <form action="/api/logout?_method=DELETE" method="POST">
     <button type="submit">Log out</button>
   </form>
-  <div class="bubble">
-    <div id="myChart">
-      <a href="https://www.zingchart.com/" rel="noopener" class="zc-ref">Powered by ZingChart</a>
-    </div>
+
+  <div id="myChart1" class="chart--container">
   </div>
-    <style>    
-        .zg-html,    
-        .zg-body {      
-            height: 100%;      
-            width: 100%;      
-            margin: 0;      
-            padding: 0;    
-        }    
-        zing-grid[loading] {      
-            height: 613px;    
-        }  
-    </style>
+  <script>
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+    fetch('http://localhost:3004/api/data/activity')
+    .then(response=>response.json())
+    .then(data => {  
+        var dataNew = [];
+        for(let i = 0; i <Object.keys(data).length; i++){ 
+            dataNew.push([data[i].mousePosition.xCoordinate,data[i].mousePosition.yCoordinate]);
+        }
+    var myConfig2 = {
+      "type": "hscatter",
+      "title": {
+            "text": "Mouse movement trace",
+            "font-color": "#7E7E7E",
+            "backgroundColor": "none",
+            "font-size": "22px",
+            "alpha": 1,
+            "adjust-layout": true,
+          },
+      "series": [{
+        "values": dataNew
+        
+      }]
+    };
+    zingchart.render({
+      id: 'myChart1',
+      data: myConfig2,
+      height: 900,
+      width: "100%"
+    });
+  });
+  </script>
+
+
     <zing-grid caption="Mouse Position" editor sort static-menu>    
         <zg-colgroup>      
             <zg-column index="X-Coordinate" header="X-Coordinate"></zg-column>      
@@ -52,7 +73,6 @@
             grid.data = bb;
         });
     </script>
-    <script src="bubble.js"></script>
     <script nonce="undefined" src="https://cdn.zinggrid.com/zinggrid.min.js"></script>  
 </body>
 </html>

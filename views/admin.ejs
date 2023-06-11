@@ -1,58 +1,249 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>ZingSoft Demo</title>
-  <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
-  <style>
-    .bubble { padding:1rem; display:flex; flex-direction:column; align-items:center; background:#fff; box-sizing:border-box; }
-    .zc-chart { margin:0 auto; }
-    .zc-ref { display:none; }
-  </style>
-</head>
-<body class="zc-body">
+<title>Home Page</title>
+<style>    
+    .zg-html,    
+    zing-grid[loading] {      
+        height: 613px;    
+    }  
+</style>
+<h1>Welcome</h1>
     <a href="/database">User Management</a>
+    <a href="/detailed">See more detailed user action report</a>
     <form action="/api/logout?_method=DELETE" method="POST">
         <button type="submit">Log out</button>
     </form>
-  <div class="bubble">
-    <div id="myChart">
-      <a href="https://www.zingchart.com/" rel="noopener" class="zc-ref">Powered by ZingChart</a>
-    </div>
-  </div>
-  <script src="bubble.js"></script>
-  <script nonce="undefined" src="https://cdn.zinggrid.com/zinggrid.min.js"></script>  
-    <style>    
-        .zg-html,    
-        .zg-body {      
-            height: 100%;      
-            width: 100%;      
-            margin: 0;      
-            padding: 0;    
-        }    
-        zing-grid[loading] {      
-            height: 613px;    
-        }  
-    </style>
-    <zing-grid caption="Mouse Position" editor sort static-menu>    
+      <script nonce="undefined" src="https://cdn.zingchart.com/zingchart.min.js"></script>
+      <title>ZingSoft Demo</title>
+      <zing-grid caption="User Screen/Window Size Collection" editor sort static-menu>    
         <zg-colgroup>      
-            <zg-column index="X-Coordinate" header="X-Coordinate"></zg-column>      
-            <zg-column index="Y-Coordinate" header="Y-Coordinate"></zg-column>      
+            <zg-column index="Device" header="Device"></zg-column>      
+            <zg-column index="Screen Size" header="Screen Size"></zg-column>     
+            <zg-column index="Window Size" header="Window Size"></zg-column>      
         </zg-colgroup>    
         <zg-data data=[]></zg-data>  
     </zing-grid>  
+    <script nonce="undefined" src="https://cdn.zinggrid.com/zinggrid.min.js"></script>  
     <script>
         let data = document.querySelector('zg-data');
-        fetch('http://localhost:3004/api/data/activity')
+        fetch('http://localhost:3004/api/data/static')
         .then(response => response.json())
         .then(data => {
             var grid = document.querySelector('zg-data');
-            let bb = [];
-            for(let i = 0; i < 50; i++){
-                bb.push({"X-Coordinate": data[i].mousePosition.xCoordinate,"Y-Coordinate": data[i].mousePosition.yCoordinate});
+            let display = [];
+            for(let i = 0; i < 20; i++){
+                let agent = data[i].userAgent;
+                let device = '';
+                if(agent.includes("Mac OS")) device = 'MacBook';
+                else device = 'Windows Laptop';
+                display.push({
+                    "Device": device,
+                    "Screen Size": `width: ${data[i].screenSize.width}, height: ${data[i].screenSize.height}`,
+                    "Window Size": `width: ${data[i].windowSize.width}, height: ${data[i].windowSize.height}`
+                });
             }
-            grid.data = bb;
+            grid.data = display;
         });
     </script>
-</body>
-</html>
+
+    <div class="bubble">
+      <div id="myChart">
+        <a href="https://www.zingchart.com/" rel="noopener" class="zc-ref">Powered by ZingChart</a>
+      </div>
+    </div>
+      <style>    
+          .zg-html,    
+          .zg-body {      
+              height: 100%;      
+              width: 100%;      
+              margin: 0;      
+              padding: 0;    
+          }    
+          zing-grid[loading] {      
+              height: 613px;    
+          }  
+      </style>
+      <script src="bubble.js"></script>
+
+      <div id="myChart1" class="chart--container">
+      </div>
+      <script>
+        ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+        fetch('http://localhost:3004/api/data/activity')
+        .then(response=>response.json())
+        .then(data => {  
+            var dataNew = [];
+            for(let i = 0; i <Object.keys(data).length; i++){ 
+                dataNew.push([data[i].mousePosition.xCoordinate,data[i].mousePosition.yCoordinate]);
+            }
+        var myConfig2 = {
+          "type": "hscatter",
+          "title": {
+                "text": "Mouse movement trace",
+                "font-color": "#7E7E7E",
+                "backgroundColor": "none",
+                "font-size": "22px",
+                "alpha": 1,
+                "adjust-layout": true,
+              },
+          "series": [{
+            "values": dataNew
+            
+          }]
+        };
+        zingchart.render({
+          id: 'myChart1',
+          data: myConfig2,
+          height: 900,
+          width: "100%"
+        });
+      });
+      </script>
+    
+      <div id='myChart2'><a class="zc-ref" ></a></div>
+      <script>
+        ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
+        fetch('http://localhost:3004/api/data/static')
+        .then(response=>response.json())
+        .then(data =>{
+          var windows = 0;
+          var linux = 0;
+          var other = 0;
+          for (let i = 0; i < Object.keys(data).length; i++){
+            if (data[i].userAgent.includes("Windows")){
+                windows += 1;
+            }
+            else if (data[i].userAgent.includes("Linux")){
+                linux += 1;
+            }
+            else{
+              other += 1;
+            }
+          };
+          var max = Math.max(windows,linux)+5;
+          var myConfig1 = {
+            "graphset": [{
+              "type": "bar",
+              "background-color": "white",
+              "title": {
+                "text": "Operating system across users",
+                "font-color": "#7E7E7E",
+                "backgroundColor": "none",
+                "font-size": "22px",
+                "alpha": 1,
+                "adjust-layout": true,
+              },
+              "plotarea": {
+                "margin": "dynamic"
+              },
+              "legend": {
+                "layout": "x3",
+                "overflow": "page",
+                "alpha": 0.05,
+                "shadow": false,
+                "align": "center",
+                "adjust-layout": true,
+                "marker": {
+                  "type": "circle",
+                  "border-color": "none",
+                  "size": "10px"
+                },
+                "border-width": 0,
+                "maxItems": 3,
+                "toggle-action": "hide",
+                "pageOn": {
+                  "backgroundColor": "#000",
+                  "size": "10px",
+                  "alpha": 0.65
+                },
+                "pageOff": {
+                  "backgroundColor": "#7E7E7E",
+                  "size": "10px",
+                  "alpha": 0.65
+                },
+                "pageStatus": {
+                  "color": "black"
+                }
+              },
+              "plot": {
+                "bars-space-left": 0.15,
+                "bars-space-right": 0.15,
+                "animation": {
+                  "effect": "ANIMATION_SLIDE_BOTTOM",
+                  "sequence": 0,
+                  "speed": 800,
+                  "delay": 800
+                }
+              },
+              "scale-y": {
+                "line-color": "#7E7E7E",
+                "item": {
+                  "font-color": "#7e7e7e"
+                },
+                "values": `0:${max}:1`,
+                "guide": {
+                  "visible": true
+                },
+                "label": {
+                  "text": "Number of Visits",
+                  "font-family": "arial",
+                  "bold": true,
+                  "font-size": "14px",
+                  "font-color": "#7E7E7E",
+                },
+              },
+              "scaleX": {
+                "values": [
+                  'Operating System'
+                ],
+                "placement": "default",
+                "tick": {
+                  "size": 58,
+                  "placement": "cross"
+                },
+                "itemsOverlap": true,
+                "item": {
+                  "offsetY": -55
+                }
+              },
+              "tooltip": {
+                "visible": false
+              },
+              "crosshair-x": {
+                "line-width": "100%",
+                "alpha": 0.18,
+                "plot-label": {
+                  "header-text": "%kv Users"
+                }
+              },
+              "series": [{
+                  "values": [windows],
+                  "alpha": 0.95,
+                  "borderRadiusTopLeft": 7,
+                  "background-color": "purple",
+                  "text": "Windows",
+                },
+                {
+                  "values": [linux],
+                  "borderRadiusTopLeft": 7,
+                  "alpha": 0.95,
+                  "background-color": "orange",
+                  "text": "Linux"
+                },
+                {
+                    "values": [other],
+                    "borderRadiusTopLeft": 7,
+                    "alpha": 0.95,
+                    "background-color": "orange",
+                    "text": "Mac"
+                  },
+              ]
+            }]
+          };
+      
+          zingchart.render({
+            id: 'myChart2',
+            data: myConfig1,
+            height: '100%',
+            width: '100%'
+          });
+        })
+      </script>  
